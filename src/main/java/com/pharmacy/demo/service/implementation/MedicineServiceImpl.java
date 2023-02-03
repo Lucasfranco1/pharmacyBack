@@ -30,63 +30,35 @@ public class MedicineServiceImpl implements MedicineService {
         return medicineRepository.findAll(pageable);
     }
 
-
-
-    @Transactional
     public MedicineDTO updateMedicine(Long id, MedicineDTO medicineDTO) {
-        Optional<MedicineEntity> medicines = medicineRepository.findById(id);
-        if(medicines.isPresent()){
-            MedicineEntity medicine = medicines.get();
-            medicine.setNameMedicine(medicineDTO.getNameMedicine());
-            medicine.setFactoryLaboratory(medicineDTO.getFactoryLaboratory());
-            medicine.setManufacturingDate(medicineDTO.getManufacturingDate());
-            medicine.setDueDate(medicineDTO.getDueDate());
-            medicine.setStockQuantity(medicineDTO.getStockQuantity());
-            medicine.setUnitValue(medicineDTO.getUnitValue());
-            medicineRepository.save(medicine);
-            return medicineMapper.medicineEntityToMedicineDTO(medicine);
-        }
-
-        throw new ParamNotFound("EL id no está en la base de datos");
-
+         MedicineEntity medicine = medicineRepository.findById(id).orElseThrow(() -> new ParamNotFound("The medicine is not found in the database"));
+         medicine.setNameMedicine(medicineDTO.getNameMedicine());
+         medicine.setFactoryLaboratory(medicineDTO.getFactoryLaboratory());
+         medicine.setDueDate(medicineDTO.getDueDate());
+         medicine.setStockQuantity(medicineDTO.getStockQuantity());
+         medicine.setManufacturingDate(medicineDTO.getManufacturingDate());
+         medicine.setUnitValue(medicineDTO.getUnitValue());
+         medicineRepository.save(medicine);
+         return medicineMapper.medicineEntityToMedicineDTO(medicine);
     }
-
     public void deleteMedicineById(Long id) {
-        try {
-            MedicineEntity medicineEntity = medicineRepository.findById(id).get();
-            medicineRepository.delete(medicineEntity);
-        }catch (Exception e){
-            throw new ParamNotFound("El id no puede ser nulo " + e.getMessage());
-        }
+        MedicineEntity medicineEntity = medicineRepository.findById(id).get();
+        medicineRepository.delete(medicineEntity);
     }
-
-    @Override
-    public MedicineEntity findMedicineById(Long id) {
-        return medicineRepository.findById(id).orElse(null);
+    public void saveStockMedicine(MedicineEntity medicine) {
+        MedicineEntity medicineEntity = getOneMedicine(medicine.getId()).get();
+        medicineRepository.save(medicineEntity);
     }
-
-    @Override
-    public MedicineEntity saveStockMedicine(MedicineEntity medicine) {
-        MedicineEntity medicineEntity = medicineRepository.findById(medicine.getId()).get();
-        return medicineRepository.save(medicineEntity);
-    }
-
-    @Override
     public List<MedicineDTO> findByNameMedicine(String name) {
         List<MedicineEntity> medicineEntities =  medicineRepository.findAllByNameMedicine(name);
         return medicineMapper.listMedicineListDTO(medicineEntities);
-
     }
-
-    @Override
-    public Optional<MedicineEntity> getOneEducation(Long id) {
+    public Optional<MedicineEntity> getOneMedicine(Long id) {
         return medicineRepository.findById(id);
     }
-
     public MedicineDTO savedMedicine(MedicineDTO medicineDTO){
         MedicineEntity medicine = medicineMapper.medicineDTO2Entity(medicineDTO);
         MedicineEntity savedMedicine = medicineRepository.save(medicine);
         return medicineMapper.medicineEntityToMedicineDTO(savedMedicine);
-
     }
 }

@@ -3,6 +3,8 @@ package com.pharmacy.demo.controller;
 
 import com.pharmacy.demo.dto.MedicineDTO;
 import com.pharmacy.demo.entity.MedicineEntity;
+import com.pharmacy.demo.exceptions.ParamNotFound;
+import com.pharmacy.demo.mapper.MedicineMapper;
 import com.pharmacy.demo.repository.MedicineRepository;
 import com.pharmacy.demo.service.MedicineService;
 import com.pharmacy.demo.service.implementation.MedicineServiceImpl;
@@ -22,12 +24,8 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class MedicineController {
     @Autowired
-    MedicineService medicineService;
+    private MedicineService medicineService;
 
-    @Autowired
-    MedicineServiceImpl medicineServiceImpl;
-    @Autowired
-    MedicineRepository medicineRepository;
 
     @GetMapping("/medicines")
     public ResponseEntity<Page<MedicineEntity>> pages(
@@ -52,24 +50,22 @@ public class MedicineController {
 
     @PostMapping
     public ResponseEntity<MedicineDTO> saveMedicine(@Valid @RequestBody MedicineDTO medicineDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(medicineServiceImpl.savedMedicine(medicineDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(medicineService.savedMedicine(medicineDTO));
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<MedicineDTO> updateMedicine(@PathVariable Long id, @Valid @RequestBody MedicineDTO medicineDTO){
         return ResponseEntity.ok(medicineService.updateMedicine(id, medicineDTO));
-
     }
-
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void>deleteMedicine(@PathVariable Long id){
+    public ResponseEntity<Void>deleteMedicine(@PathVariable Long id) {
         medicineService.deleteMedicineById(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<MedicineEntity> getByIdEducation(@PathVariable() Long id){
-        MedicineEntity medicine = medicineService.getOneEducation(id).get();
+        MedicineEntity medicine = medicineService.getOneMedicine(id).get();
         return new ResponseEntity(medicine, HttpStatus.OK);
     }
 

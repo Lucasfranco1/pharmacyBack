@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/sales")
 @CrossOrigin(origins = "http://localhost:4200")
 public class SaleController {
-
+/*
     @Autowired
     SaleService saleService;
 
@@ -45,4 +45,6 @@ public class SaleController {
         return new ResponseEntity<Page<SaleEntity>>(sales, HttpStatus.OK);
 
     }
+
+ */
 }

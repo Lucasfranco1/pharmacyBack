@@ -49,7 +49,7 @@ public class SaleServiceImpl implements SaleService {
     }
 
     public void restStock(SaleDTO saleDTO){
-        MedicineEntity medicine = medicineService.findMedicineById(saleDTO.getMedicine().getId());
+        MedicineEntity medicine = medicineService.getOneMedicine(saleDTO.getMedicine().getId()).get();
         int stock = Integer.parseInt(saleDTO.getMedicine().getStockQuantity());
         int amount = saleDTO.getAmount();
         if(stock>=amount){

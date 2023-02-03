@@ -1,20 +1,19 @@
 package com.pharmacy.demo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 @Table(name = "medicines")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE medicines SET soft_delete = true WHERE id=?")
@@ -49,4 +48,16 @@ public class MedicineEntity {
     private boolean softDelete = Boolean.FALSE;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MedicineEntity medicineEntity = (MedicineEntity) o;
+        return Objects.equals(id, medicineEntity.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

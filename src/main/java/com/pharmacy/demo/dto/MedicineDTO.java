@@ -1,14 +1,21 @@
 package com.pharmacy.demo.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 
 @Data
-public class MedicineDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class MedicineDTO  {
 
+    private String id;
     @NotNull
     @NotBlank
     private String nameMedicine;
